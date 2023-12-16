@@ -5,3 +5,8 @@
 .tag-pill {
   cursor: pointer;
 }
+
+.layout {
+  display: flex;
+  justify-content: space-between;
+}

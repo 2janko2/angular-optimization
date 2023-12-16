@@ -7,7 +7,7 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { User } from "../../core/models/user.model";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { ListErrorsComponent } from "../../shared/list-errors.component";
 import { Errors } from "../../core/models/errors.model";
 import { Subject } from "rxjs";
@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly router: Router,
-    private readonly userService: UserService
+    private readonly userService: CustomerService
   ) {}
 
   ngOnInit(): void {

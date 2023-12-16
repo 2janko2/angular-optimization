@@ -6,7 +6,7 @@ import {
   ViewContainerRef,
   ViewRef,
 } from "@angular/core";
-import { UserService } from "../core/services/user.service";
+import { CustomerService } from "../core/services/user.service";
 
 @Directive({
   selector: "[appShowAuthed]",
@@ -15,7 +15,7 @@ import { UserService } from "../core/services/user.service";
 export class ShowAuthedDirective implements OnInit {
   constructor(
     private templateRef: TemplateRef<any>,
-    private userService: UserService,
+    private userService: CustomerService,
     private viewContainer: ViewContainerRef
   ) {}
 
@@ -24,7 +24,7 @@ export class ShowAuthedDirective implements OnInit {
   authRef: ViewRef | undefined;
 
   ngOnInit() {
-    this.userService.isAuthenticated.subscribe((isAuthenticated: boolean) => {
+    this.userService.isCustomerLoggedIn.subscribe((isAuthenticated: boolean) => {
       if (
         (isAuthenticated && this.condition) ||
         (!isAuthenticated && !this.condition)

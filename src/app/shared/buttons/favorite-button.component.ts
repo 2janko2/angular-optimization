@@ -10,7 +10,7 @@ import { EMPTY, Subject, switchMap } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { NgClass } from "@angular/common";
 import { ArticlesService } from "../../core/services/articles.service";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { Article } from "../../core/models/article.model";
 
 @Component({
@@ -29,7 +29,7 @@ export class FavoriteButtonComponent implements OnDestroy {
   constructor(
     private readonly articleService: ArticlesService,
     private readonly router: Router,
-    private readonly userService: UserService
+    private readonly userService: CustomerService
   ) {}
 
   ngOnDestroy() {
@@ -40,7 +40,7 @@ export class FavoriteButtonComponent implements OnDestroy {
   toggleFavorite(): void {
     this.isSubmitting = true;
 
-    this.userService.isAuthenticated
+    this.userService.isCustomerLoggedIn
       .pipe(
         switchMap((authenticated) => {
           if (!authenticated) {

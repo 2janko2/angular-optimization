@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from "@angular/core";
 import { ArticlesService } from "../../core/services/articles.service";
 import { ArticleListConfig } from "../../core/models/article-list-config.model";
 import { Article } from "../../core/models/article.model";
@@ -14,6 +14,7 @@ import { takeUntil } from "rxjs/operators";
   templateUrl: "./article-list.component.html",
   imports: [ArticlePreviewComponent, NgForOf, NgClass, NgIf],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticleListComponent implements OnDestroy {
   query!: ArticleListConfig;

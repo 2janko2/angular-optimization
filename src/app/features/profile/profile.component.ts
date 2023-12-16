@@ -8,7 +8,7 @@ import {
 } from "@angular/router";
 import { catchError, switchMap, takeUntil } from "rxjs/operators";
 import { combineLatest, of, Subject, throwError } from "rxjs";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { Profile } from "../../core/models/profile.model";
 import { ProfileService } from "../../core/services/profile.service";
 import { FollowButtonComponent } from "../../shared/buttons/follow-button.component";
@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly userService: UserService,
+    private readonly userService: CustomerService,
     private readonly profileService: ProfileService
   ) {}
 
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           return throwError(() => error);
         }),
         switchMap((profile) => {
-          return combineLatest([of(profile), this.userService.currentUser]);
+          return combineLatest([of(profile), this.userService.customer]);
         }),
         takeUntil(this.destroy$)
       )

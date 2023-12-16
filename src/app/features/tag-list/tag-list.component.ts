@@ -1,19 +1,19 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { TagsService } from "../../core/services/tags.service";
 import { ArticleListConfig } from "../../core/models/article-list-config.model";
-import { AsyncPipe, NgClass, NgForOf } from "@angular/common";
+import { AsyncPipe, NgClass, NgForOf, NgIf } from "@angular/common";
 import { ArticleListComponent } from "../../shared/article-helpers/article-list.component";
 import { takeUntil, tap } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { LetDirective } from "@rx-angular/template/let";
 import { ShowAuthedDirective } from "../../shared/show-authed.directive";
 
 @Component({
-  selector: "app-home-page",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"],
+  selector: "app-tag-list",
+  templateUrl: "./tag-list.component.html",
+  styleUrls: ["./tag-list.component.css"],
   imports: [
     NgClass,
     ArticleListComponent,
@@ -21,56 +21,63 @@ import { ShowAuthedDirective } from "../../shared/show-authed.directive";
     LetDirective,
     NgForOf,
     ShowAuthedDirective,
+    NgIf
   ],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit, OnDestroy {
-  isAuthenticated = false;
+export class TagListComponent implements OnInit, OnDestroy {
+  isCustomerLoggedIn = false;
+
   listConfig: ArticleListConfig = {
     type: "all",
-    filters: {},
+    filters: {}
   };
+
   tags$ = inject(TagsService)
     .getAll()
     .pipe(tap(() => (this.tagsLoaded = true)));
+
   tagsLoaded = false;
-  destroy$ = new Subject<void>();
+
+  subscriptionCancellation$ = new Subject<void>();
 
   constructor(
     private readonly router: Router,
-    private readonly userService: UserService
-  ) {}
+    private readonly customerService: CustomerService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.userService.isAuthenticated
+    this.customerService.isCustomerLoggedIn
       .pipe(
         tap((isAuthenticated) => {
           if (isAuthenticated) {
-            this.setListTo("feed");
+            debugger;
+            this.redirectUnauthorizedCustomer("feed");
           } else {
-            this.setListTo("all");
+            debugger;
+            this.redirectUnauthorizedCustomer("all");
           }
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.subscriptionCancellation$)
       )
       .subscribe(
-        (isAuthenticated: boolean) => (this.isAuthenticated = isAuthenticated)
+        (isAuthenticated: boolean) => (this.isCustomerLoggedIn = isAuthenticated)
       );
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.subscriptionCancellation$.next();
+    this.subscriptionCancellation$.complete();
   }
 
-  setListTo(type: string = "", filters: Object = {}): void {
-    // If feed is requested but user is not authenticated, redirect to login
-    if (type === "feed" && !this.isAuthenticated) {
+  redirectUnauthorizedCustomer(type: string = "", filters: Object = {}): void {
+    if (type === "feed" && !this.isCustomerLoggedIn) {
       void this.router.navigate(["/login"]);
       return;
     }
 
-    // Otherwise, set the list object
     this.listConfig = { type: type, filters: filters };
   }
 }

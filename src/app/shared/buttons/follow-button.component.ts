@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { EMPTY, Subject } from "rxjs";
 import { ProfileService } from "../../core/services/profile.service";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { Profile } from "../../core/models/profile.model";
 import { NgClass } from "@angular/common";
 
@@ -28,7 +28,7 @@ export class FollowButtonComponent implements OnDestroy {
   constructor(
     private readonly profileService: ProfileService,
     private readonly router: Router,
-    private readonly userService: UserService
+    private readonly userService: CustomerService
   ) {}
 
   ngOnDestroy(): void {
@@ -39,7 +39,7 @@ export class FollowButtonComponent implements OnDestroy {
   toggleFollowing(): void {
     this.isSubmitting = true;
 
-    this.userService.isAuthenticated
+    this.userService.isCustomerLoggedIn
       .pipe(
         switchMap((isAuthenticated: boolean) => {
           if (!isAuthenticated) {

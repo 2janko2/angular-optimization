@@ -5,7 +5,7 @@ import { User } from "../../core/models/user.model";
 import { Article } from "../../core/models/article.model";
 import { ArticlesService } from "../../core/services/articles.service";
 import { CommentsService } from "../../core/services/comments.service";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { ArticleMetaComponent } from "../../shared/article-helpers/article-meta.component";
 import { AsyncPipe, NgClass, NgForOf, NgIf } from "@angular/common";
 import { FollowButtonComponent } from "../../shared/buttons/follow-button.component";
@@ -59,7 +59,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private readonly articleService: ArticlesService,
     private readonly commentsService: CommentsService,
     private readonly router: Router,
-    private readonly userService: UserService
+    private readonly userService: CustomerService
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +67,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     combineLatest([
       this.articleService.get(slug),
       this.commentsService.getAll(slug),
-      this.userService.currentUser,
+      this.userService.customer,
     ])
       .pipe(
         catchError((err) => {

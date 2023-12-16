@@ -1,0 +1,21 @@
+<div>
+  <div class="sidebar">
+    <p>Popular Tags</p>
+
+    <div class="tag-list">
+      <a
+        *ngFor="let tag of (tags$ | async)"
+        (click)="redirectUnauthorizedCustomer('all', { tag: tag })"
+        class="tag-default tag-pill"
+      >
+        {{ tag }}
+      </a>
+    </div>
+
+    <div *ngIf="!tagsLoaded">Loading tags...</div>
+
+    <div *ngIf="(tags$ | async)?.length! <= 0">
+      You did not add any tags before
+    </div>
+  </div>
+</div>

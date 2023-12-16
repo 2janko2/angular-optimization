@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { User } from "../../core/models/user.model";
 import { RouterLink } from "@angular/router";
 import { map } from "rxjs/operators";
@@ -16,7 +16,7 @@ export class ArticleCommentComponent {
   @Input() comment!: Comment;
   @Output() delete = new EventEmitter<boolean>();
 
-  canModify$ = inject(UserService).currentUser.pipe(
+  canModify$ = inject(CustomerService).customer.pipe(
     map(
       (userData: User | null) =>
         userData?.username === this.comment.author.username

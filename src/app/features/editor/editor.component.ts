@@ -11,7 +11,7 @@ import { Subject, combineLatest } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Errors } from "../../core/models/errors.model";
 import { ArticlesService } from "../../core/services/articles.service";
-import { UserService } from "../../core/services/user.service";
+import { CustomerService } from "../../core/services/user.service";
 import { ListErrorsComponent } from "../../shared/list-errors.component";
 
 interface ArticleForm {
@@ -43,7 +43,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     private readonly articleService: ArticlesService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly userService: UserService
+    private readonly userService: CustomerService
   ) {}
 
   ngOnInit() {

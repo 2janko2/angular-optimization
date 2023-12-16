@@ -8,13 +8,15 @@ import { User } from "../models/user.model";
 import { Router } from "@angular/router";
 
 @Injectable({ providedIn: "root" })
-export class UserService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser = this.currentUserSubject
+export class CustomerService {
+  private _user = new BehaviorSubject<User | null>(null);
+  
+  public customer = this._user
     .asObservable()
     .pipe(distinctUntilChanged());
 
-  public isAuthenticated = this.currentUser.pipe(map((user) => !!user));
+  
+  public isCustomerLoggedIn = this.customer.pipe(map((user) => !!user));
 
   constructor(
     private readonly http: HttpClient,
@@ -28,7 +30,7 @@ export class UserService {
   }): Observable<{ user: User }> {
     return this.http
       .post<{ user: User }>("/users/login", { user: credentials })
-      .pipe(tap(({ user }) => this.setAuth(user)));
+      .pipe(tap(({ user }) => this.setCustomerSpecificInfos(user)));
   }
 
   register(credentials: {
@@ -38,19 +40,19 @@ export class UserService {
   }): Observable<{ user: User }> {
     return this.http
       .post<{ user: User }>("/users", { user: credentials })
-      .pipe(tap(({ user }) => this.setAuth(user)));
+      .pipe(tap(({ user }) => this.setCustomerSpecificInfos(user)));
   }
 
   logout(): void {
-    this.purgeAuth();
+    this.removeCustomerSpecificInfos();
     void this.router.navigate(["/"]);
   }
 
   getCurrentUser(): Observable<{ user: User }> {
     return this.http.get<{ user: User }>("/user").pipe(
       tap({
-        next: ({ user }) => this.setAuth(user),
-        error: () => this.purgeAuth(),
+        next: ({ user }) => this.setCustomerSpecificInfos(user),
+        error: () => this.removeCustomerSpecificInfos(),
       }),
       shareReplay(1)
     );
@@ -59,18 +61,18 @@ export class UserService {
   update(user: Partial<User>): Observable<{ user: User }> {
     return this.http.put<{ user: User }>("/user", { user }).pipe(
       tap(({ user }) => {
-        this.currentUserSubject.next(user);
+        this._user.next(user);
       })
     );
   }
 
-  setAuth(user: User): void {
+  setCustomerSpecificInfos(user: User): void {
     this.jwtService.saveToken(user.token);
-    this.currentUserSubject.next(user);
+    this._user.next(user);
   }
 
-  purgeAuth(): void {
+  removeCustomerSpecificInfos(): void {
     this.jwtService.destroyToken();
-    this.currentUserSubject.next(null);
+    this._user.next(null);
   }
 }

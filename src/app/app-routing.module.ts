@@ -1,6 +1,6 @@
 import { inject, NgModule } from "@angular/core";
 import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
-import { UserService } from "./core/services/user.service";
+import { CustomerService } from "./core/services/user.service";
 import { map } from "rxjs/operators";
 import { ProfileComponent } from "./features/profile/profile.component";
 
@@ -8,14 +8,14 @@ const routes: Routes = [
   {
     path: "",
     loadComponent: () =>
-      import("./features/home/home.component").then((m) => m.HomeComponent),
+      import("./features/home/main-page.component").then((m) => m.MainPageComponent),
   },
   {
     path: "login",
     loadComponent: () =>
       import("./core/auth/auth.component").then((m) => m.AuthComponent),
     canActivate: [
-      () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
+      () => inject(CustomerService).isCustomerLoggedIn.pipe(map((isAuth) => !isAuth)),
     ],
   },
   {
@@ -23,7 +23,7 @@ const routes: Routes = [
     loadComponent: () =>
       import("./core/auth/auth.component").then((m) => m.AuthComponent),
     canActivate: [
-      () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
+      () => inject(CustomerService).isCustomerLoggedIn.pipe(map((isAuth) => !isAuth)),
     ],
   },
   {
@@ -32,7 +32,7 @@ const routes: Routes = [
       import("./features/settings/settings.component").then(
         (m) => m.SettingsComponent
       ),
-    canActivate: [() => inject(UserService).isAuthenticated],
+    canActivate: [() => inject(CustomerService).isCustomerLoggedIn],
   },
   {
     path: "profile",
@@ -68,7 +68,7 @@ const routes: Routes = [
           import("./features/editor/editor.component").then(
             (m) => m.EditorComponent
           ),
-        canActivate: [() => inject(UserService).isAuthenticated],
+        canActivate: [() => inject(CustomerService).isCustomerLoggedIn],
       },
       {
         path: ":slug",
@@ -76,7 +76,7 @@ const routes: Routes = [
           import("./features/editor/editor.component").then(
             (m) => m.EditorComponent
           ),
-        canActivate: [() => inject(UserService).isAuthenticated],
+        canActivate: [() => inject(CustomerService).isCustomerLoggedIn],
       },
     ],
   },

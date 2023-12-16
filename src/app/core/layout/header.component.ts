@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { UserService } from "../services/user.service";
+import { CustomerService } from "../services/user.service";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { ShowAuthedDirective } from "../../shared/show-authed.directive";
@@ -11,5 +11,5 @@ import { ShowAuthedDirective } from "../../shared/show-authed.directive";
   standalone: true,
 })
 export class HeaderComponent {
-  currentUser$ = inject(UserService).currentUser;
+  currentUser$ = inject(CustomerService).customer;
 }
